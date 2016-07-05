@@ -1,5 +1,5 @@
-hi<?php
-
+<?php
+// Same as error_reporting(E_ALL);
 require_once("ga.class.php");
 
 $css = <<<CSS

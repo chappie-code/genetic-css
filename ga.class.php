@@ -1,5 +1,7 @@
 <?php
 
+require_once("medoo.php");
+
 class GeneticCSS{
 
   var $max_pool_size;
@@ -35,6 +37,8 @@ class GeneticCSS{
       {
         $this->populate_gene_pool();
       }
+
+      if()
 
 
   }
