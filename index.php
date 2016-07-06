@@ -10,7 +10,7 @@ CSS;
 $ga = new GeneticCSS(1);
 
 $ga->step();
-$ga->dump();
+//$ga->dump();
 
 ?>
 <html>

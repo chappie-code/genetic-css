@@ -22,9 +22,10 @@ class GeneticCSS{
     $this->gene_pool[] = $this->eve;
 
     $this->property_list = ["font-size", "color"];
+    $this->db = new Medoo();
 
 
-    $this->dump();
+  //  $this->dump();
   }
 
 
@@ -37,8 +38,6 @@ class GeneticCSS{
       {
         $this->populate_gene_pool();
       }
-
-      if()
 
 
   }
@@ -82,7 +81,15 @@ class GeneticCSS{
       $baby[$property] = rand(0,1)? $gene1[$property] : $gene2[$property];
     }
 
+    $this->store_gene($baby);
     return $baby;
+  }
+
+  function store_gene($gene)
+  {
+    $gene = json_encode($gene);
+    $this->db->insert('genes',$gene);
+    return;
   }
 
   function open_generation()

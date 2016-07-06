@@ -17,10 +17,10 @@ class medoo
 	protected $database_name = "genetics";
 
 	// For MySQL, MariaDB, MSSQL, Sybase, PostgreSQL, Oracle
-	protected $server;
-	protected $username = "genetics";
+	protected $server = "localhost";
+	protected $username = "root";
 
-	protected $password = "genetics";
+	protected $password = "root";
 
 	// For SQLite
 	protected $database_file;
@@ -29,7 +29,7 @@ class medoo
 	protected $socket;
 
 	// Optional
-	protected $port = "8889";
+	protected $port = "3306";
 
 	protected $option = array();
 
