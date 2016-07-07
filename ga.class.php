@@ -28,17 +28,49 @@ class GeneticCSS{
   //  $this->dump();
   }
 
+  function strain_population()
+  {
+
+  }
 
 
 
   function step()
   {
+      //Clear weakest genes if there's been enough generations
+      $generation = $this->get_generation();
+      $max = $this->get_max_generations()
+      if($generation >= $max)
+      {
+        $this->strain_population();
+      }
 
+
+      // repopulate the pool
       if(count($this->gene_pool) < $this->gene_pool_size)
       {
         $this->populate_gene_pool();
       }
 
+
+  }
+
+  function update_generation()
+  {
+    $this->db->query("update dna_strands set current_generation = current_generation+1 where id=1");
+  }
+
+  function get_generation()
+  {
+    $data = $this->db->get('dna_strands',['current_generation'],['id' => 1]);
+    return $data['current_generation'];
+
+  }
+
+  function get_max_generations()
+  {
+    $data = $this->db->get('dna_strands',['max_generations'],['id' => 1]);
+    return $data['max_generations'];
 
   }
 
@@ -58,7 +90,8 @@ class GeneticCSS{
 
   function populate_gene_pool()
   {
-    $count = count($this->gene_pool) - 1;
+    //$count = count($this->gene_pool) - 1;
+    $count = $this->count_genes() - 1;
 
     for($i = $count; $i < $this->gene_pool_size; $i++)
     {
@@ -87,9 +120,21 @@ class GeneticCSS{
 
   function store_gene($gene)
   {
-    $gene = json_encode($gene);
+    $gene = ["data"=>json_encode($gene), "parent_id"=>1];
     $this->db->insert('genes',$gene);
-    return;
+
+  }
+
+  function count_genes()
+  {
+    $count = $this->db->query("select count(*) as count from genes where parent_id=1")->fetchAll(PDO::FETCH_ASSOC);
+    $count = $count[0]["count"];
+    return $count;
+  }
+
+  function kill_all()
+  {
+    $this->db->delete('genes',["AND" =>['parent_id' => 1]]);
   }
 
   function open_generation()

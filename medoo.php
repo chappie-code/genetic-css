@@ -36,7 +36,7 @@ class medoo
 	// Variable
 	protected $logs = array();
 
-	protected $debug_mode = true;
+	protected $debug_mode = false;
 
 	public function __construct($options = null)
 	{
