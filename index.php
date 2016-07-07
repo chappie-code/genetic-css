@@ -10,8 +10,8 @@ CSS;
 $ga = new GeneticCSS(1);
 
 $ga->step();
-$ga->kill_all();
-
+//$ga->kill_all();
+$ga->load_genepool();
 
 ?>
 <html>

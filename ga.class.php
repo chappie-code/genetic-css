@@ -33,13 +33,25 @@ class GeneticCSS{
 
   }
 
+  function load_genepool()
+  {
+    $data = $this->db->select('genes','data',['parent_id' => 1]);
+    var_dump($data);
+    $pool = array();
+    foreach($data as $raw_gene)
+    {
+      $pool[] = json_decode($raw_gene);
+    }
 
+    var_dump($pool);
+
+  }
 
   function step()
   {
       //Clear weakest genes if there's been enough generations
       $generation = $this->get_generation();
-      $max = $this->get_max_generations()
+      $max = $this->get_max_generations();
       if($generation >= $max)
       {
         $this->strain_population();
