@@ -2,7 +2,7 @@
 // Same as error_reporting(E_ALL);
 require_once("ga.class.php");
 $ga = new GeneticCSS(1);
-$ga->kill_all();
+//$ga->kill_all();
 $ga->step();
 ?>
 <html>

@@ -47,7 +47,17 @@ class GeneticCSS{
     // get a list of id's for the lowest scoring genes
     // delete those id's
     // allow the generation to repopilate
-    $this->kill_all();
+
+
+    $this->kill_weakest_population();
+
+  }
+
+  function kill_weakest_population()
+  {
+
+    $current_pool = $this->load_genepool_stats();
+    var_dump($current_pool);
 
   }
 
@@ -66,11 +76,14 @@ class GeneticCSS{
 
   function load_genepool_stats()
   {
-    $data = $this->db->select('genes','conversions,views',['parent_id' => 1]);
-    $pool = array();
+    $data = $this->db->select('genes','id,conversions,views',['parent_id' => 1]);
+    var_dump($data);
+//die();
+
+    $pool_stats = array();
     foreach($data as $raw_gene)
     {
-      $pool_stats[] = [$raw_gene[0],$raw_gene[1]];
+      $pool_stats[] = $raw_gene;
     }
 
     return $pool_stats;
@@ -210,7 +223,11 @@ class GeneticCSS{
 
   function update_generation()
   {
-    $this->db->query("update dna_strands set current_generation = current_generation+1 where id=1");
+    if($this->get_generation() < $this->get_max_generations())
+      $this->db->query("update dna_strands set current_generation = current_generation+1 where id=1");
+    else {
+      $this->db->query("update dna_strands set current_generation = 0 where id=1");
+    }
   }
 
   function increment_gene_view($gene_id)
