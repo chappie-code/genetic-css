@@ -44,13 +44,18 @@ class GeneticCSS{
   function strain_population()
   {
 
-    // get a list of id's for the lowest scoring genes
-    // delete those id's
-    // allow the generation to repopilate
-
-
     $this->kill_weakest_population();
+    $this->reset_stats();
 
+  }
+
+  function reset_stats()
+  {
+
+    $table = 'genes';
+    $set = ['views' => 0, 'conversions' => 0];
+    $where = ['parent_id' => 1];
+    $this->db->update($table,$set,$where);
   }
 
   function kill_weakest_population()
@@ -84,7 +89,7 @@ class GeneticCSS{
       if($gene['views'] > 0)
       {
 
-        if(($gene['conversions']/$gene['views']) <= $average)
+        if(($gene['conversions']/$gene['views']) < $average)
         {
             $purge_list[] = $gene['id'];
         }
