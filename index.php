@@ -14,6 +14,7 @@ $ga->step();
 <body>
   <?php
     $ga->stats();
+    
   ?>
   <div id="<?php echo $ga->get_css_id()?>" onclick="httpGetAsync();">Click Me!</div>
 

@@ -56,8 +56,46 @@ class GeneticCSS{
   function kill_weakest_population()
   {
 
-    $current_pool = $this->load_genepool_stats();
-    var_dump($current_pool);
+    $pool_stats = $this->load_genepool_stats();
+    $purge_list = array();
+    $average = 0;
+    $views = 0.0;
+    $conversions = 0.0;
+
+    //get the average
+    foreach($pool_stats as $gene)
+    {
+      //$average += ($gene['conversions']/$gene['views']);
+      $views += $gene['views'];
+      $conversions += $gene['conversions'];
+
+    }
+
+    if($views > 0)
+      $average = $conversions / $views;
+    else {
+      $average = 0;
+    }
+
+    //collect below average
+
+    foreach($pool_stats as $gene)
+    {
+      if($gene['views'] > 0)
+      {
+
+        if(($gene['conversions']/$gene['views']) <= $average)
+        {
+            $purge_list[] = $gene['id'];
+        }
+
+      }
+    }
+
+    //purge list
+    $this->kill_list($purge_list);
+
+
 
   }
 
@@ -76,9 +114,10 @@ class GeneticCSS{
 
   function load_genepool_stats()
   {
-    $data = $this->db->select('genes','id,conversions,views',['parent_id' => 1]);
-    var_dump($data);
-//die();
+    $data = $this->db->query('select id,conversions,views from genes where parent_id = 1')->fetchAll(PDO::FETCH_ASSOC);
+    //$data = $data[0];
+    //var_dump($data);
+    //die();
 
     $pool_stats = array();
     foreach($data as $raw_gene)
@@ -131,6 +170,9 @@ class GeneticCSS{
     //$val = $this->db->get('genes','data',['parent_id'=>1]);
     $this->css_id = $css_id;
     $gene = $this->db->query("select id,data from genes where parent_id = 1 order by rand() limit 1")->fetchAll(PDO::FETCH_ASSOC);
+
+
+
     $gene = $gene[0];
 
 
@@ -306,11 +348,24 @@ class GeneticCSS{
 
   }
 
+  /*
+
+  Returns database gene count
+
+  */
   function count_genes()
   {
     $count = $this->db->query("select count(*) as count from genes where parent_id=1")->fetchAll(PDO::FETCH_ASSOC);
     $count = $count[0]["count"];
     return $count;
+  }
+
+  function kill_list($list)
+  {
+    foreach($list as $gene_id)
+    {
+      $this->db->delete('genes',["AND" =>['parent_id' => 1, 'id' =>$gene_id]]);
+    }
   }
 
 
